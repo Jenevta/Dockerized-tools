@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/azure-cli
+ENV TERRAFORM_VERSION 0.12.24
+RUN az aks install-cli 
+RUN apk update && apk add mysql-client curl git vim tmux  && rm -rf /var/cache/apk/* 
+RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh && chmod 700 get_helm.sh \
+&& ./get_helm.sh
+WORKDIR /root
+RUN curl https://raw.githubusercontent.com/Jenevta/dotfiles/master/.bashrc >.bashrc && chmod 700 .bashrc 
+RUN curl https://raw.githubusercontent.com/Jenevta/dotfiles/master/.vimrc >.vimrc && chmod 700 .vimrc 
+RUN curl https://raw.githubusercontent.com/Jenevta/dotfiles/master/.tmux.conf >.tmux.conf && chmod 700 .tmux.conf 
+
+RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+RUN cd /usr/local/bin && \
+    curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+WORKDIR /
+RUN mkdir files
+WORKDIR files
+VOLUME /files 
