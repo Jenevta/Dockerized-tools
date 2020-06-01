@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/azure-cli
 ENV TERRAFORM_VERSION 0.12.24
 RUN az aks install-cli 
-RUN apk update && apk add mysql-client curl git vim tmux  && rm -rf /var/cache/apk/* 
+RUN apk update && apk add mysql-client curl git vim tmux ctags python3 && rm -rf /var/cache/apk/* 
 RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh && chmod 700 get_helm.sh \
 && ./get_helm.sh
 WORKDIR /root
